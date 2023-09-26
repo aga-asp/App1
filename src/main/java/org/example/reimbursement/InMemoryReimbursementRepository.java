@@ -4,17 +4,17 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReimbursementInMemoryDatabase {
+public class InMemoryReimbursementRepository {
 
     private static Map<String, Reimbursement> reimbursementDataBase;
-    private static ReimbursementInMemoryDatabase instance;
+    private static InMemoryReimbursementRepository instance;
 
-    public Map<String, Reimbursement> getReimbursementDataBase() {
+    public Map<String, Reimbursement> getReimbursementDataBaseValues() {
         return reimbursementDataBase;
     }
 
-    private ReimbursementInMemoryDatabase(Map<String, Reimbursement> reimbursementDataBase) {
-        ReimbursementInMemoryDatabase.reimbursementDataBase = reimbursementDataBase;
+    private InMemoryReimbursementRepository(Map<String, Reimbursement> reimbursementDataBase) {
+        InMemoryReimbursementRepository.reimbursementDataBase = reimbursementDataBase;
     }
 
     private static Map<String, Reimbursement> reimbursementBasicData() {
@@ -34,9 +34,9 @@ public class ReimbursementInMemoryDatabase {
         return ReimbursementData;
     }
 
-    public static ReimbursementInMemoryDatabase createSingleton() {
+    public static InMemoryReimbursementRepository getDatabase() {
         if (instance == null) {
-            instance = new ReimbursementInMemoryDatabase(reimbursementBasicData());
+            instance = new InMemoryReimbursementRepository(reimbursementBasicData());
         }
         return instance;
     }

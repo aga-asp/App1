@@ -1,10 +1,10 @@
-package org.example.common_classes;
+package org.example.mappersandreaders;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class QueryParametersMapper {
-    public static Map<String, String> mapQueryParameters(String query) {
+    public static Map<String, String> mapToQueryParameters(String query) {
         Map<String, String> params = new HashMap<>();
         if (query != null) {
             String[] keyValuePairs = query.split("&");

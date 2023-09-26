@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Reimbursement {
-    private String Id;
-    private String ownerId;
+    private final String Id;
+    private final String ownerId;
     private BigDecimal dailyAllowance;
     private BigDecimal carMillage;
 
@@ -27,8 +27,13 @@ public class Reimbursement {
         return carMillage;
     }
 
-    public void setId(String id) {
-        Id = id;
+    public Reimbursement(String id, String ownerId, BigDecimal dailyAllowance, BigDecimal carMillage, ReimbursementStatus reimbursementStatus) {
+        this.Id = id;
+        this.ownerId = ownerId;
+        this.dailyAllowance = dailyAllowance;
+        this.carMillage = carMillage;
+        this.reimbursementStatus = reimbursementStatus;
+
     }
 
     public void setDailyAllowance(BigDecimal dailyAllowance) {
@@ -47,21 +52,11 @@ public class Reimbursement {
         this.reimbursementStatus = reimbursementStatus;
     }
 
-    public Reimbursement(){}
-
-    public Reimbursement(String id, String ownerId, BigDecimal dailyAllowance, BigDecimal carMillage, ReimbursementStatus reimbursementStatus) {
-        this.Id = id;
-        this.ownerId = ownerId;
-        this.dailyAllowance = dailyAllowance;
-        this.carMillage = carMillage;
-        this.reimbursementStatus = reimbursementStatus;
-
-    }
 
     public String toStringCustom() {
-         return "Reimbursement{" +
-                "Id=" + Id  +
-                ", ownerId=" + ownerId  +
+        return "Reimbursement{" +
+                "Id=" + Id +
+                ", ownerId=" + ownerId +
                 ", dailyAllowance=" + dailyAllowance +
                 ", carMillage=" + carMillage +
                 ", reimbursementType=" + reimbursementStatus +
@@ -83,7 +78,11 @@ public class Reimbursement {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Reimbursement that)) return false;
-        return getId().equals(that.getId()) && Objects.equals(getOwnerId(), that.getOwnerId()) && Objects.equals(getDailyAllowance(), that.getDailyAllowance()) && Objects.equals(getCarMillage(), that.getCarMillage()) && reimbursementStatus == that.reimbursementStatus;
+        return getId().equals(that.getId())
+                && Objects.equals(getOwnerId(), that.getOwnerId())
+                && Objects.equals(getDailyAllowance(), that.getDailyAllowance())
+                && Objects.equals(getCarMillage(), that.getCarMillage())
+                && reimbursementStatus == that.reimbursementStatus;
     }
 
     @Override

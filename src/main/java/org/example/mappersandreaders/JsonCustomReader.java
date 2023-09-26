@@ -1,14 +1,12 @@
-package org.example.common_classes;
+package org.example.mappersandreaders;
 
 import com.sun.net.httpserver.HttpExchange;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class JsonCustomReader {
     public static String readJson(HttpExchange httpExchange) throws IOException {
-
         BufferedReader reader = new BufferedReader(new InputStreamReader(httpExchange.getRequestBody()));
         String inputLine;
         StringBuilder response = new StringBuilder();
@@ -16,8 +14,7 @@ public class JsonCustomReader {
             response.append(inputLine);
         }
         reader.close();
-        return String.valueOf(response);
-        
+        return response.toString();
     }
 
 }

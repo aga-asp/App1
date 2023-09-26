@@ -2,48 +2,63 @@ package org.example.login;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.example.common_classes.QueryParametersMapper;
-import org.example.custom_errors.BadUserNameOrPasswordException;
-import org.example.response.Response;
+import org.example.mappersandreaders.QueryParametersMapper;
+import org.example.customexceptions.InvalidCredentials;
+import org.example.response.ResponseSender;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class LoginHandler implements HttpHandler {
+    LoginService loginService;
+
+    public LoginHandler(LoginService loginService) {
+        this.loginService = loginService;
+    }
+
     public void handle(HttpExchange httpExchange) throws IOException {
-        switch (httpExchange.getRequestMethod()) {
-            case "GET" -> handleLoginGetRequest(httpExchange);
-            case "POST" -> System.out.println("post");
-            default -> {
+        String methodString = httpExchange.getRequestMethod();
+        String queryString = httpExchange.getRequestURI().toString();
+        Pattern pattern = Pattern.compile("/login\\?username=([^&]+)&password=([^&]+)");
+        Matcher matcher = pattern.matcher(queryString);
+//
+//        Map<Pattern, Function<HttpExchange, Object>> requestHandlerMap = new HashMap<>();
+//        {
+//            requestHandlerMap.put(pattern,this::returnLoggedUser)
+//        }
+        switch (methodString) {
+            case "GET" -> {
+                if (matcher.find()) {
+                    handleLoginGetRequest(httpExchange);
+                } else {
+                    ResponseSender.sendResponse(httpExchange, 404, "Not found");
+                }
             }
+            case "POST" -> {
+                if (matcher.find()) {
+                    handleLoginPostRequest(httpExchange);
+                } else {
+                    ResponseSender.sendResponse(httpExchange, 404, "Not found");
+                }
+            }
+            default -> ResponseSender.sendResponse(httpExchange, 404, "Operation not supported by the server");
         }
     }
+
+    //--TODO Post method--
+    private void handleLoginPostRequest(HttpExchange httpExchange) {
+        System.out.println("empty post");
+    }
+
     private void handleLoginGetRequest(HttpExchange httpExchange) throws IOException {
         String query = httpExchange.getRequestURI().getQuery();
         try {
-            if (LoginService.returnLoggedUser(QueryParametersMapper.mapQueryParameters(query))!=null) {
-                Response.sendResponse(httpExchange, 200, "Login successful!");
+            if (loginService.returnLoggedUser(QueryParametersMapper.mapToQueryParameters(query)) != null) {
+                ResponseSender.sendResponse(httpExchange, 200, "Login successful!");
             }
-        } catch (BadUserNameOrPasswordException | IOException e) {
-            Response.sendResponse(httpExchange, 401, "Bad username or password");
+        } catch (InvalidCredentials e) {
+            ResponseSender.sendResponse(httpExchange, 401, "Bad username or password");
         }
     }
-
-    //        String query = httpExchange.getRequestURI().getQuery();
-//        try {
-//            if (LoginService.getLoggedUser(QueryParametersMapper.mapQueryParameters(query, 2, "&", "="))!=null) {
-//                Response.sendResponse(httpExchange, 200, "Login successful!");
-//            }
-//        } catch (BadUserNameOrPasswordException e) {
-//            Response.sendResponse(httpExchange, 401, "Bad username or password");
-//        }
-
-
-//    static class MyHandler implements HttpHandler {
-//        @Override
-//        public void handle(HttpExchange exchange) throws IOException {
-//            if ("GET".equals(exchange.getRequestMethod())) {
-//                handleGetRequest(exchange);
-//            } else if ("POST".equals(exchange.getRequestMethod())) {
-//                handlePostRequest(exchange);
-//            }
-//        }
 }

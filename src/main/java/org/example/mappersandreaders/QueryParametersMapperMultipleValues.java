@@ -1,12 +1,12 @@
-package org.example.common_classes;
+package org.example.mappersandreaders;
 
-import java.util.Arrays;
+import org.example.customexceptions.IncorrectQuery;
+
 import java.util.HashMap;
 import java.util.Map;
 
-//Bo po prostu lubię utrudniać sobie życie
 public class QueryParametersMapperMultipleValues {
-    public static Map<String, String[]> mapQueryParameters(String query) {
+    public static Map<String, String[]> mapToQueryParameters(String query) throws IncorrectQuery {
         Map<String, String[]> params = new HashMap<>();
         if (query != null) {
             String[] keyValuePairs = query.split("&");
@@ -20,9 +20,8 @@ public class QueryParametersMapperMultipleValues {
             }
         }
         if (params.size() > 1) {
-            throw new UnknownError();
+            throw new IncorrectQuery();
         }
-        //params.forEach((key, value) -> System.out.println(key + "/" + Arrays.toString(value)));
         return params;
     }
 }
